@@ -11,7 +11,6 @@ COPY package*.json ./
 RUN npm install --production --legacy-peer-deps
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./next.config.js
 ENV PORT=80
 ENV HOSTNAME='0.0.0.0'
 # Expose the port on which your React app will run (typically 80 for HTTP)
