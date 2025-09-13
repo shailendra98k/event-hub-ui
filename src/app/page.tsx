@@ -16,6 +16,28 @@ const SearchPage: React.FC = () => {
   const [results, setResults] = useState<any[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const cityOptions = [
+    'New York',
+    'London',
+    'Paris',
+    'Tokyo',
+    'Berlin',
+    'Sydney',
+  ];
+  const [cityDropdown, setCityDropdown] = useState<string[]>([]);
+
+  const handleCityInput = (value: string) => {
+    setCity(value);
+    if (value.trim() === '') {
+      setCityDropdown([]);
+      return;
+    }
+    const filtered = cityOptions.filter(c =>
+      c.toLowerCase().includes(value.toLowerCase())
+    );
+    setCityDropdown(filtered);
+  };
+
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
@@ -29,6 +51,7 @@ const SearchPage: React.FC = () => {
         setResults(filtered);
         setLoading(false);
       }, 500);
+      window.location.href='/venues/?capacity=' + capacity + '&city=' + city;
     } catch (e) {
       setError('Failed to fetch results');
       setLoading(false);
@@ -58,16 +81,52 @@ const SearchPage: React.FC = () => {
           marginBottom: 24,
         }}
       >
-        <input
-          aria-label="City name"
-          type="text"
-          placeholder="Enter city name..."
-          value={city}
-          onChange={e => setCity(e.target.value)}
-          onFocus={() => setShowDropdown(true)}
-          onBlur={handleBlur}
-          style={{ flex: 2, padding: '0.75rem 1rem', borderRadius: 8, border: '1px solid #ccc', fontSize: 18, minWidth: 0 }}
-        />
+        <div style={{ position: 'relative', flex: 2 }}>
+          <input
+            aria-label="City name"
+            type="text"
+            placeholder="Enter city name..."
+            value={city}
+            onChange={e => handleCityInput(e.target.value)}
+            onFocus={() => setShowDropdown(true)}
+            onBlur={handleBlur}
+            style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: 8, border: '1px solid #ccc', fontSize: 18, minWidth: 0 }}
+          />
+          {cityDropdown.length > 0 && (
+            <ul
+              style={{
+                position: 'absolute',
+                top: '110%',
+                left: 0,
+                right: 0,
+                background: '#222',
+                color: '#fff',
+                border: '1px solid #333',
+                borderRadius: 8,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                zIndex: 20,
+                maxHeight: 180,
+                overflowY: 'auto',
+                margin: 0,
+                padding: 0,
+                listStyle: 'none',
+              }}
+            >
+              {cityDropdown.map(cityName => (
+                <li
+                  key={cityName}
+                  style={{ padding: '0.75rem 1rem', cursor: 'pointer', borderBottom: '1px solid #333' }}
+                  onMouseDown={() => {
+                    setCity(cityName);
+                    setCityDropdown([]);
+                  }}
+                >
+                  {cityName}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <input
           aria-label="Guest capacity"
           type="number"
@@ -85,49 +144,6 @@ const SearchPage: React.FC = () => {
         >
           Search
         </button>
-        {showDropdown && (
-          <ul
-            role="listbox"
-            style={{
-              position: 'absolute',
-              top: '110%',
-              left: 0,
-              right: 0,
-              background: '#222',
-              color: '#fff',
-              border: '1px solid #333',
-              borderRadius: 8,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
-              zIndex: 10,
-              maxHeight: 200,
-              overflowY: 'auto',
-              margin: 0,
-              padding: 0,
-              listStyle: 'none',
-            }}
-          >
-            {loading && <li style={{ padding: '1rem' }}>Loading...</li>}
-            {error && <li style={{ padding: '1rem', color: 'red' }}>{error}</li>}
-            {!loading && results.length === 0 && (city || capacity) && (
-              <li style={{ padding: '1rem', color: '#888' }}>No hotels found</li>
-            )}
-            {!loading && results.map(hotel => (
-              <li
-                key={hotel.id}
-                role="option"
-                tabIndex={0}
-                style={{ padding: '1rem', cursor: 'pointer', borderBottom: '1px solid #333' }}
-                onMouseDown={() => handleSelect(hotel)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') handleSelect(hotel);
-                }}
-                aria-selected={false}
-              >
-                {hotel.name} - {hotel.city} (Capacity: {hotel.capacity})
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
       <style jsx>{`
         @media (max-width: 700px) {
