@@ -1,0 +1,87 @@
+name: Build and Deploy to ECS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Get Workdir
+        run: |
+          pwd
+          ls
+
+      - name: Create log file
+        run: |
+          touch app.log
+
+      - name: Create ENV file
+        run: |
+          touch .env
+          echo DB="${{ secrets.DB}}" >> .env
+          echo DB_USER="${{ secrets.DB_USER}}" >> .env
+          echo DB_PASSWORD="${{ secrets.DB_PASSWORD}}" >> .env
+          echo ZOHO_USER="${{ secrets.ZOHO_USER}}" >> .env
+          echo ZOHO_USER_PASSWORD="${{ secrets.ZOHO_USER_PASSWORD}}" >> .env
+          echo MONGO_CONN_URL="${{ secrets.MONGO_CONN_URL}}" >> .env
+          echo MONGO_USER="${{ secrets.MONGO_USER}}" >> .env
+          echo MONGO_USER_PASSWORD="${{ secrets.MONGO_USER_PASSWORD}}" >> .env
+          echo NEXT_PUBLIC_ACCESS_TOKEN="${{ secrets.ACCESS_TOKEN}}" >> .env
+          echo NEXT_PUBLIC_GOOGLE_ANALYTICS="${{ secrets.GOOGLE_ANALYTICS}}" >> .env
+          echo NEXT_PUBLIC_CLARITY="${{ secrets.CLARITY}}" >> .env
+          echo NEXT_PUBLIC_BASE_URL="${{ secrets.NEXT_PUBLIC_BASE_URL}}" >> .env
+          echo BASE_URL="${{ secrets.BASE_URL}}" >> .env
+
+
+      - name: Build Docker Image
+        run: |
+          docker build .
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: shailendra98k
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: shailendra98k/crispyread
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Configure AWS Credentials
+        run: |
+          mkdir ~/.aws
+          touch ~/.aws/credentials
+          echo "[default]" > ~/.aws/credentials
+          echo "region"="ap-south-1" >> ~/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+
+      - name: Update ECS Task Definition
+        run: |
+          # Using AWS CLI to update the ECS task definition with the new image tag
+          aws ecs register-task-definition --family crispyread  --container-definitions '[{"name":"crispyread","image":"shailendra98k/crispyread:latest", "memory":500, "portMappings":[{"hostPort": 80, "protocol": "tcp", "containerPort":80}] }]' --region ap-south-1
+
+      - name: Stop ECS Task
+        run: |
+          aws ecs list-tasks --cluster "CrispyRead" --family crispyread | jq -r ".taskArns[]" | xargs -n1 aws ecs stop-task --no-cli-pager --cluster "CrispyRead" --task
+
+
+      - name: Run ECS Task
+        run: |
+          # Using AWS CLI to run the ECS task using the updated task definition
+          aws ecs run-task --cluster CrispyRead --task-definition crispyread
