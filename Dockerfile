@@ -24,12 +24,12 @@ FROM node:20-slim
 WORKDIR /app
 # RUN npm install next
 # # Copy the necessary files from the build stage (previous FROM)
-COPY --from=builder /app/.next/standalone ./standalone
-COPY --from=builder /app/.next/static ./standalone/.next/static
-COPY --from=builder /app/public ./standalone/public
+#COPY --from=builder /app/.next/standalone ./standalone
+#COPY --from=builder /app/.next/static ./standalone/.next/static
+#COPY --from=builder /app/public ./standalone/public
 
 # # Copy the build files from the build stage (previous FROM)
-# COPY --from=builder /app/.next ./.next
+ COPY --from=builder /app/.next ./.next
 
 # Install serve to run the production server
 # RUN npm install -g serve
@@ -41,4 +41,5 @@ EXPOSE 443
 EXPOSE 3000
 
 
-CMD [ "node","./standalone/server.js" ]
+#CMD [ "node","./standalone/server.js" ]
+RUN npm run start
