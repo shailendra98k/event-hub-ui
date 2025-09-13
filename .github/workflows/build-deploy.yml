@@ -51,7 +51,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: shailendra98k/crispyread
+          images: shailendra98k/eventhubui
 
       - name: Build and push Docker image
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
@@ -74,14 +74,14 @@ jobs:
       - name: Update ECS Task Definition
         run: |
           # Using AWS CLI to update the ECS task definition with the new image tag
-          aws ecs register-task-definition --family crispyread  --container-definitions '[{"name":"crispyread","image":"shailendra98k/crispyread:latest", "memory":500, "portMappings":[{"hostPort": 80, "protocol": "tcp", "containerPort":80}] }]' --region ap-south-1
+          aws ecs register-task-definition --family eventhubui  --container-definitions '[{"name":"eventhubui","image":"shailendra98k/eventhubui:latest", "memory":500, "portMappings":[{"hostPort": 80, "protocol": "tcp", "containerPort":80}] }]' --region ap-south-1
 
       - name: Stop ECS Task
         run: |
-          aws ecs list-tasks --cluster "CrispyRead" --family crispyread | jq -r ".taskArns[]" | xargs -n1 aws ecs stop-task --no-cli-pager --cluster "CrispyRead" --task
+          aws ecs list-tasks --cluster "EventHub" --family eventhubui | jq -r ".taskArns[]" | xargs -n1 aws ecs stop-task --no-cli-pager --cluster "EventHub" --task
 
 
       - name: Run ECS Task
         run: |
           # Using AWS CLI to run the ECS task using the updated task definition
-          aws ecs run-task --cluster CrispyRead --task-definition crispyread
+          aws ecs run-task --cluster EventHub --task-definition eventhubui
