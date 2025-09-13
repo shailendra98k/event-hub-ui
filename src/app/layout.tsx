@@ -32,7 +32,9 @@ export default function RootLayout({
         >
         <UserProvider>
             <Navbar/>
-            {children}
+            <div style={{minHeight: '59vh'}}>
+                {children}
+            </div>
             <Footer/>
         </UserProvider>
 

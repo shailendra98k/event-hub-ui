@@ -42,7 +42,7 @@ const VenueProfilePage: React.FC<VenueProfileProps> = ({ params }) => {
   }
 
   return (
-    <main style={{ padding: '2rem', maxWidth: 800, margin: '0 auto' }}>
+    <main style={{ padding: '2rem', maxWidth: 800, minHeight:'65vh', margin: '0 auto' }}>
       <h1 style={{ marginBottom: '1rem' }}>{venue.name}</h1>
       <div style={{ display: 'flex', gap: '2rem', marginBottom: '2rem' }}>
         {venue.images.map((img, idx) => (
