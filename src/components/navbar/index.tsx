@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react';
+import SignInModal from '../../signInModal';
 
 const Navbar: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -58,105 +59,12 @@ const Navbar: React.FC = () => {
         )}
       </div>
       {showLogin && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 200,
-          }}
-          onClick={() => { setShowLogin(false); setShowSignup(false); }}
-        >
-          <div
-            style={{
-              background: '#fff',
-              color: '#222',
-              borderRadius: 12,
-              padding: '2rem',
-              minWidth: 320,
-              boxShadow: '0 2px 16px rgba(0,0,0,0.15)',
-              position: 'relative',
-            }}
-            onClick={e => e.stopPropagation()}
-          >
-            {!showSignup ? (
-              <>
-                <h2 style={{ marginBottom: '1rem' }}>Login</h2>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', borderRadius: 8, border: '1px solid #ccc' }}
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', borderRadius: 8, border: '1px solid #ccc' }}
-                />
-                <button
-                  onClick={handleLogin}
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: 8, background: '#222', color: '#fff', fontSize: 18, border: 'none', cursor: 'pointer' }}
-                >
-                  Login
-                </button>
-                <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                  <span>Don't have an account? </span>
-                  <a
-                    href="#"
-                    style={{ color: '#222', textDecoration: 'underline', fontWeight: 500 }}
-                    onClick={e => { e.preventDefault(); setShowSignup(true); }}
-                  >
-                    Sign up
-                  </a>
-                </div>
-              </>
-            ) : (
-              <>
-                <h2 style={{ marginBottom: '1rem' }}>Sign Up</h2>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', borderRadius: 8, border: '1px solid #ccc' }}
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', borderRadius: 8, border: '1px solid #ccc' }}
-                />
-                <button
-                  onClick={() => { setShowSignup(false); setShowLogin(false); }}
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: 8, background: '#222', color: '#fff', fontSize: 18, border: 'none', cursor: 'pointer' }}
-                >
-                  Sign Up
-                </button>
-                <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                  <span>Already have an account? </span>
-                  <a
-                    href="#"
-                    style={{ color: '#222', textDecoration: 'underline', fontWeight: 500 }}
-                    onClick={e => { e.preventDefault(); setShowSignup(false); }}
-                  >
-                    Login
-                  </a>
-                </div>
-              </>
-            )}
-            <button
-              onClick={() => { setShowLogin(false); setShowSignup(false); }}
-              style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#222' }}
-              aria-label="Close login modal"
-            >
-              ×
-            </button>
-          </div>
-        </div>
+        <SignInModal
+          showSignup={showSignup}
+          setShowSignup={setShowSignup}
+          setShowLogin={setShowLogin}
+          handleLogin={handleLogin}
+        />
       )}
       <style jsx>{`
         @media (max-width: 600px) {

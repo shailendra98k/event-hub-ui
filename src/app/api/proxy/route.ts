@@ -38,9 +38,8 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify(body),
     });
     const data = await res.json();
-    return NextResponse.json(data);
+    return NextResponse.json(data, { status: res.status });
   } catch (error) {
-    return NextResponse.json({ error: 'Proxy error', details: String(error) }, { status: 500 });
+    return NextResponse.json({ error: error, details: String(error) }, { status: 500 });
   }
 }
-
