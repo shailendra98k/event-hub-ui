@@ -2,11 +2,12 @@ import type {NextRequest} from 'next/server';
 import {NextResponse} from 'next/server';
 
 // Change this to your backend URL
-const BACKEND_URL = 'http://localhost:8080';
+const BACKEND_URL = 'http://localhost:8080/api';
 
 export async function GET(req: NextRequest) {
-    const url = req.nextUrl.searchParams.get('url');
-    if (!url) {
+    console.log('req.nextUrl: ',req.nextUrl);
+    const proxyUrl = req.nextUrl.pathname.split('/api/proxy')[1] + req.nextUrl.search;
+    if (!proxyUrl) {
         return NextResponse.json({error: 'Missing url parameter'}, {status: 400});
     }
     try {
@@ -19,8 +20,10 @@ export async function GET(req: NextRequest) {
             }
         }
 
+        console.log("Proxy url : ", proxyUrl)
 
-        const res = await fetch(`${BACKEND_URL}${url}`, {
+
+        const res = await fetch(`${BACKEND_URL}${proxyUrl}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,8 +38,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-    const url = req.nextUrl.searchParams.get('url');
-    if (!url) {
+    const proxyUrl = req.nextUrl.pathname.split('/api/proxy')[1]
+    if (!proxyUrl) {
         return NextResponse.json({error: 'Missing url parameter'}, {status: 400});
     }
 
@@ -50,7 +53,7 @@ export async function POST(req: NextRequest) {
     }
     const body = await req.json();
     try {
-        const res = await fetch(`${BACKEND_URL}${url}`, {
+        const res = await fetch(`${BACKEND_URL}${proxyUrl}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

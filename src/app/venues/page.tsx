@@ -1,49 +1,30 @@
 'use client';
-import React, { useState } from 'react';
-
-const venues = [
-	{
-		id: 1,
-		name: 'Venue A',
-		image: '/venue-a.jpg',
-		description: 'A beautiful venue in the heart of the city.',
-		rate: '$200/night',
-		capacity: 100,
-		city: 'New York',
-	},
-	{
-		id: 2,
-		name: 'Venue B',
-		image: '/venue-b.jpg',
-		description: 'Spacious and modern venue for all occasions.',
-		rate: '$350/night',
-		capacity: 200,
-		city: 'London',
-	},
-	{
-		id: 3,
-		name: 'Venue C',
-		image: '/venue-c.jpg',
-		description: 'Cozy venue with excellent amenities.',
-		rate: '$150/night',
-		capacity: 50,
-		city: 'Paris',
-	},
-];
-
+import React, {useEffect, useState} from 'react';
 const VenuesListPage: React.FC = () => {
-	const [city, setCity] = useState('');
-	const [capacity, setCapacity] = useState<number | ''>('');
-	const [filteredVenues, setFilteredVenues] = useState(venues);
+    const [city, setCity] = useState('');
+    const [capacity, setCapacity] = useState<number | ''>('');
+    const [filteredVenues, setFilteredVenues] = useState<[{name: string, id:number, image: string, rate: number,capacity: number, description: string, city: string}]>();
+    const fetchVenues = async () => {
+        const res = await fetch(`/api/proxy/v1/venues?minCapacity=${capacity}&city=${city}`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        });
 
-	const handleFilter = () => {
-		const filtered = venues.filter(
-			v =>
-				v.city.toLowerCase().includes(city.toLowerCase()) &&
-				(capacity === '' || v.capacity >= Number(capacity))
-		);
-		setFilteredVenues(filtered);
-	};
+        if (res.ok) {
+            const data = await res.json();
+            console.log('data', data);
+            setFilteredVenues(data);
+        }
+
+    };
+    useEffect(() => {
+
+        fetchVenues();
+    }, []);
+
+    const handleFilter = () => {
+        fetchVenues();
+    }
 
 	return (
 		<main style={{ padding: '2rem' }}>
@@ -123,7 +104,7 @@ const VenuesListPage: React.FC = () => {
 					overflowX: 'hidden', // Prevent horizontal scroll
 				}}
 			>
-				{filteredVenues.map(venue => (
+				{filteredVenues?.map(venue => (
 					<li
 						key={venue.id}
 						style={{
@@ -141,7 +122,7 @@ const VenuesListPage: React.FC = () => {
 						}}
 					>
 						<img
-							src={venue.image}
+							src={venue?.image}
 							alt={venue.name}
 							style={{
 								width: 120,
@@ -165,35 +146,36 @@ const VenuesListPage: React.FC = () => {
 								<span>
 									<strong>Rate:</strong> {venue.rate}
 								</span>
-								<span>
+                                <span>
 									<strong>Capacity:</strong> {venue.capacity}
 								</span>
-								<span>
+                                <span>
 									<strong>City:</strong> {venue.city}
 								</span>
-							</div>
-						</div>
-					</li>
-				))}
-			</ul>
-			<style jsx>{`
-				@media (max-width: 700px) {
-					.venue-filter-bar {
-						flex-direction: column !important;
-						gap: 8px !important;
-						max-width: 100% !important;
-					}
-					.venue-filter-bar input,
-					.venue-filter-bar button {
-						font-size: 16px !important;
-						padding: 0.75rem 0.5rem !important;
-						width: 100% !important;
-						min-width: 0 !important;
-					}
-				}
-			`}</style>
-		</main>
-	);
+                            </div>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+            <style jsx>{`
+                @media (max-width: 700px) {
+                    .venue-filter-bar {
+                        flex-direction: column !important;
+                        gap: 8px !important;
+                        max-width: 100% !important;
+                    }
+
+                    .venue-filter-bar input,
+                    .venue-filter-bar button {
+                        font-size: 16px !important;
+                        padding: 0.75rem 0.5rem !important;
+                        width: 100% !important;
+                        min-width: 0 !important;
+                    }
+                }
+            `}</style>
+        </main>
+    );
 };
 
 export default VenuesListPage;

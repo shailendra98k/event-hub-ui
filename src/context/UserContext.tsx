@@ -22,7 +22,7 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const res = await fetch('/api/proxy?url=/api/auth/info', {
+                const res = await fetch('/api/proxy/auth/info', {
                     method: 'GET',
                     headers: {'Content-Type': 'application/json'}
                 });

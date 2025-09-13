@@ -27,7 +27,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ setShowSignup, setShowLogin }
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/proxy?url=/api/auth/signup', {
+      const res = await fetch('/api/proxy/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ firstName, lastName, email, password }),
