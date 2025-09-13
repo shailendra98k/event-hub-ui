@@ -81,7 +81,7 @@ jobs:
 
       - name: Stop ECS Task
         run: |
-          aws ecs list-tasks --cluster "EventHub" --family eventhubui | jq -r ".taskArns[]" | xargs -n1 aws ecs stop-task --no-cli-pager --cluster "EventHub" --task
+          aws ecs list-tasks --cluster "EventHub" --family eventhubui | jq -r ".taskArns[]" | grep -q . && aws ecs list-tasks --cluster "EventHub" --family eventhubui | jq -r ".taskArns[]" | xargs -n1 aws ecs stop-task --no-cli-pager --cluster "EventHub" --task || echo "No running tasks to stop."
 
 
       - name: Run ECS Task
