@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from "next/link";
 
 const cities = ['New York', 'London', 'Paris', 'Tokyo', 'Berlin', 'Sydney'];
 
@@ -10,7 +11,6 @@ const Footer: React.FC = () => (
     padding: '2rem 0',
     textAlign: 'center',
     borderTop: '1px solid #333',
-    position: 'fixed',
     left: 0,
     bottom: 0,
     zIndex: 99,
@@ -25,7 +25,7 @@ const Footer: React.FC = () => (
     </div>
     <div style={{ marginBottom: '1rem' }}>
 
-      <a
+      <Link
         href="/venues/register"
         style={{
           background: '#fff',
@@ -41,7 +41,7 @@ const Footer: React.FC = () => (
         }}
       >
         Register Your Venue
-      </a>
+      </Link>
     </div>
     <div style={{ fontSize: 14, color: '#aaa', marginTop: '1rem' }}>
       &copy; {new Date().getFullYear()} eventHub. All rights reserved.

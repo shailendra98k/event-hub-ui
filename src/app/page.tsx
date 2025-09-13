@@ -45,33 +45,43 @@ const SearchPage: React.FC = () => {
   };
 
   return (
-    <main style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '4rem' }}>
-      <h1 style={{ marginBottom: '2rem' }}>Search Hotels</h1>
-      <div style={{ position: 'relative', width: '100%', maxWidth: 400, display: 'flex', flexDirection: 'row', gap: 12 }}>
+    <main style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '4rem', width: '100%' }}>
+      <h1 style={{ marginBottom: '2rem', textAlign: 'center', fontSize: '2rem' }}>Search Hotels</h1>
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: 600,
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 12,
+          marginBottom: 24,
+        }}
+      >
         <input
           aria-label="City name"
           type="text"
-          placeholder="City"
+          placeholder="Enter city name..."
           value={city}
           onChange={e => setCity(e.target.value)}
           onFocus={() => setShowDropdown(true)}
           onBlur={handleBlur}
-          style={{ flex: 2, padding: '0.75rem 1rem', borderRadius: 8, border: '1px solid #ccc', fontSize: 18 }}
+          style={{ flex: 2, padding: '0.75rem 1rem', borderRadius: 8, border: '1px solid #ccc', fontSize: 18, minWidth: 0 }}
         />
         <input
           aria-label="Guest capacity"
           type="number"
           min={1}
-          placeholder="Guest count"
+          placeholder="Guest capacity required..."
           value={capacity}
           onChange={e => setCapacity(e.target.value === '' ? '' : Number(e.target.value))}
           onFocus={() => setShowDropdown(true)}
           onBlur={handleBlur}
-          style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: 8, border: '1px solid #ccc', fontSize: 18 }}
+          style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: 8, border: '1px solid #ccc', fontSize: 18, minWidth: 0 }}
         />
         <button
           onClick={handleSearch}
-          style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: 8, background: '#222', color: '#fff', fontSize: 18, border: 'none', cursor: 'pointer' }}
+          style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: 8, background: '#222', color: '#fff', fontSize: 18, border: 'none', cursor: 'pointer', minWidth: 0 }}
         >
           Search
         </button>
@@ -119,6 +129,18 @@ const SearchPage: React.FC = () => {
           </ul>
         )}
       </div>
+      <style jsx>{`
+        @media (max-width: 700px) {
+          div[style*='display: flex'][style*='flexDirection: row'] {
+            flex-direction: column !important;
+            gap: 8px !important;
+          }
+          input, button {
+            font-size: 16px !important;
+            padding: 0.75rem 0.5rem !important;
+          }
+        }
+      `}</style>
     </main>
   );
 };
