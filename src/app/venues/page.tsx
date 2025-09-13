@@ -16,7 +16,7 @@ const VenuesListPage: React.FC = () => {
         city: string
     }]>();
     const fetchVenues = async (city: string | null, capacity: string | null) => {
-        const res = await fetch(`/api/proxy/v1/venues?minCapacity=${capacity?? 0}&city=${city??''}`, {
+        const res = await fetch(`/api/proxy/v1/venues?minCapacity=${capacity ?? 0}&city=${city ?? ''}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         });
@@ -31,7 +31,7 @@ const VenuesListPage: React.FC = () => {
     useEffect(() => {
         setCity(new URLSearchParams(window.location.search).get('city') || '')
         setCapacity(new URLSearchParams(window.location.search).get('capacity') || '')
-        fetchVenues(new URLSearchParams(window.location.search).get('city') ,new URLSearchParams(window.location.search).get('capacity') );
+        fetchVenues(new URLSearchParams(window.location.search).get('city'), new URLSearchParams(window.location.search).get('capacity'));
     }, []);
 
     const handleFilter = () => {
@@ -114,8 +114,6 @@ const VenuesListPage: React.FC = () => {
             </div>
 
 
-
-
             <ul
                 style={{
                     listStyle: 'none',
@@ -126,13 +124,12 @@ const VenuesListPage: React.FC = () => {
                     width: '100%', // Ensure ul takes full width of parent
                     boxSizing: 'border-box',
                     overflowX: 'hidden', // Prevent horizontal scroll
-                    minHeight:'44vh'
+                    minHeight: '44vh'
                 }}
             >
                 {filteredVenues?.map(venue => (
-                    <li
-                        key={venue.id}
-                        style={{
+                    <li key={venue.id}>
+                        <a href={`/venues/${venue.id}`} style={{
                             display: 'flex',
                             gap: '2rem',
                             alignItems: 'center',
@@ -144,41 +141,42 @@ const VenuesListPage: React.FC = () => {
                             width: '100%', // Make li take full width
                             boxSizing: 'border-box',
                             overflow: 'hidden', // Prevent content overflow
-                        }}
-                    >
-                        <img
-                            src={venue?.image}
-                            alt={venue.name}
-                            style={{
-                                width: 120,
-                                height: 80,
-                                objectFit: 'cover',
-                                borderRadius: 8,
-                                background: '#444',
-                                maxWidth: '100%',
-                            }}
-                        />
-                        <div style={{flex: 1, minWidth: 0}}>
-                            <h2 style={{margin: 0}}>{venue.name}</h2>
-                            <p style={{margin: '0.5rem 0'}}>{venue.description}</p>
-                            <div
+                        }}>
+                            <img
+                                src={venue?.image}
+                                alt={venue.name}
                                 style={{
-                                    display: 'flex',
-                                    gap: '2rem',
-                                    marginTop: '0.5rem',
+                                    width: 120,
+                                    height: 80,
+                                    objectFit: 'cover',
+                                    borderRadius: 8,
+                                    background: '#444',
+                                    maxWidth: '100%',
                                 }}
-                            >
+                            />
+                            <div style={{flex: 1, minWidth: 0}}>
+                                <h2 style={{margin: 0}}>{venue.name}</h2>
+                                <p style={{margin: '0.5rem 0'}}>{venue.description}</p>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        gap: '2rem',
+                                        marginTop: '0.5rem',
+                                    }}
+                                >
 								<span>
 									<strong>Rate:</strong> {venue.rate}
 								</span>
-                                <span>
+                                    <span>
 									<strong>Capacity:</strong> {venue?.capacityMax}
 								</span>
-                                <span>
+                                    <span>
 									<strong>City:</strong> {venue.city}
 								</span>
+                                </div>
                             </div>
-                        </div>
+                        </a>
+
                     </li>
                 ))}
             </ul>
