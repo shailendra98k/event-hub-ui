@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SignupModal from './signupModal';
 import {cookies} from "next/headers";
+import { useUser } from './context/UserContext';
 
 interface SignInModalProps {
   showSignup: boolean;
@@ -24,6 +25,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ showSignup, setShowSignup, se
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { setUserInfo } = useUser();
 
   const handleSignIn = async () => {
     setLoading(true);
@@ -40,8 +42,16 @@ const SignInModal: React.FC<SignInModalProps> = ({ showSignup, setShowSignup, se
         if (data.token) {
           document.cookie = `jwtToken=${data.token}; path=/; SameSite=Strict;`;
         }
+        // Set user info in context
+        setUserInfo({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          userRole: data.userRole,
+        });
         handleLogin();
         setShowLogin(false);
+
       } else {
         setError(data.message || 'Login failed');
       }

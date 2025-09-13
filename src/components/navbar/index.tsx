@@ -1,11 +1,19 @@
 'use client'
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import SignInModal from '../../signInModal';
+import { useUser } from '@/context/UserContext';
 
 const Navbar: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { userInfo } = useUser();
+
+    useEffect(() => {
+        if(userInfo && userInfo.firstName) {
+            setIsLoggedIn(true);
+        }
+    }, [userInfo]);
 
   const handleLogin = () => {
     // Simulate login
@@ -55,7 +63,7 @@ const Navbar: React.FC = () => {
             Login
           </button>
         ) : (
-          <span style={{ fontSize: 18 }}>Welcome!</span>
+          <span style={{ fontSize: 18 }}>Welcome {userInfo?.firstName || 'Guest'}</span>
         )}
       </div>
       {showLogin && (
