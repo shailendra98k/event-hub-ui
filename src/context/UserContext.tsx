@@ -4,9 +4,9 @@ import {normalizeUrl} from "next/dist/build/webpack/loaders/css-loader/src/utils
 
 export interface UserInfo {
     firstName?: string;
-    lastName?: string;
+    id?: number;
     email?: string;
-    userRole?: string;
+    role?: string;
 }
 
 interface UserContextType {
@@ -32,9 +32,8 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
                     console.log('data', data);
                     setUserInfo({
                         firstName: data.firstName,
-                        lastName: data.lastName,
                         email: data.email,
-                        userRole: data.userRole,
+                        role: data.role,
                     });
                 }
             } catch (e) {
