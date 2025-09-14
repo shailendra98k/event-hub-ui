@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SignupModal from './signupModal';
 import {cookies} from "next/headers";
-import { useUser } from './context/UserContext';
+import { useUser } from '../../context/UserContext';
 
 interface SignInModalProps {
   showSignup: boolean;
@@ -45,9 +45,8 @@ const SignInModal: React.FC<SignInModalProps> = ({ showSignup, setShowSignup, se
         // Set user info in context
         setUserInfo({
           firstName: data.firstName,
-          lastName: data.lastName,
           email: data.email,
-          userRole: data.userRole,
+          role: data.role,
         });
         handleLogin();
         setShowLogin(false);

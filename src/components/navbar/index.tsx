@@ -1,6 +1,6 @@
 'use client'
 import React, {useEffect, useState} from 'react';
-import SignInModal from '../../signInModal';
+import SignInModal from '../modals/signInModal';
 import { useUser } from '@/context/UserContext';
 
 const Navbar: React.FC = () => {
