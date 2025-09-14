@@ -2,7 +2,7 @@ import type {NextRequest} from 'next/server';
 import {NextResponse} from 'next/server';
 
 // Change this to your backend URL
-const BACKEND_URL = 'http://localhost:8080/api';
+const BACKEND_URL = 'http://ec2-13-235-73-50.ap-south-1.compute.amazonaws.com:8080/api';
 
 export async function GET(req: NextRequest) {
     console.log('req.nextUrl: ',req.nextUrl);
