@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
       top: 0,
       zIndex: 100,
     }}>
-      <div style={{ fontWeight: 700, fontSize: 24, letterSpacing: 1 }}>eventHub</div>
+      <div style={{ fontWeight: 700, fontSize: 24, letterSpacing: 1 }}> <a href={"/"}>eventHub</a> </div>
       <div>
         {!isLoggedIn ? (
           <button
@@ -63,7 +63,10 @@ const Navbar: React.FC = () => {
             Login
           </button>
         ) : (
-          <span style={{ fontSize: 18 }}>Welcome {userInfo?.firstName || 'Guest'}</span>
+          <span style={{ fontSize: 18 }}>Welcome, {userInfo?.firstName || 'Guest'} &nbsp; &nbsp;
+
+              <a href={"/dashboard"} style={{ fontSize: 18, textDecoration:'underline' }}>Go to dashboard</a>
+          </span>
         )}
       </div>
       {showLogin && (

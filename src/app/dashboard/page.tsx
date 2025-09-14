@@ -26,7 +26,7 @@ const Dashboard = () => {
         getRfps();
     }, [userInfo]);
 
-    console.log('Rfps:', rfps);
+
 
 
     return (
