@@ -16,19 +16,28 @@ src/
   app/
     dashboard/    # Buyer dashboard and RFPs
     venues/       # Venue listing and details
-    api/          # API proxy routes
+      [id]/       # Venue details by ID
+    api/
+      [...proxy]/ # API proxy routes
     globals.css   # Global styles
     layout.tsx    # App layout
     page.tsx      # Home page
   components/
     navbar/       # Top navigation bar
     footer/       # Footer
+    modals/
+      signInModal.tsx # Login modal
+      signupModal.tsx # Signup modal
   context/
     UserContext.tsx # User authentication context
   constant.ts     # App constants
-  signInModal.tsx # Login modal
-  signupModal.tsx # Signup modal
 Dockerfile        # Docker configuration for containerized deployment
+eslint.config.mjs # ESLint configuration
+next.config.ts    # Next.js configuration
+package.json      # Project metadata and dependencies
+tsconfig.json     # TypeScript configuration
+postcss.config.mjs# PostCSS configuration
+next-env.d.ts     # Next.js TypeScript environment
 ```
 ## Hosting
 The application is currently hosted on AWS and can be accessed at:
@@ -71,6 +80,17 @@ You can also run the application using Docker:
    docker run -p 3000:3000 eventhub-ui
    ```
 3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+Alternatively, you can use the pre-built Docker image deployed on AWS ECS:
+
+```bash
+docker pull shailendra98k/eventhubui:main
+```
+
+Then run it as usual:
+```bash
+docker run -p 3000:3000 shailendra98k/eventhubui:main
+```
 
 ## Customization
 - Update styles in `src/app/globals.css` or component files.
