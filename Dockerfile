@@ -6,14 +6,26 @@ COPY . .
 RUN npm run build
 
 FROM node:20-slim
+
+# # Set the working directory inside the container
 WORKDIR /app
-COPY package*.json ./
-RUN npm install --production --legacy-peer-deps
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
+# RUN npm install next
+# # Copy the necessary files from the build stage (previous FROM)
+COPY --from=builder /app/.next/standalone ./standalone
+COPY --from=builder /app/.next/static ./standalone/.next/static
+COPY --from=builder /app/public ./standalone/public
+
+# # Copy the build files from the build stage (previous FROM)
+# COPY --from=builder /app/.next ./.next
+
+# Install serve to run the production server
+# RUN npm install -g serve
 ENV PORT=80
 ENV HOSTNAME='0.0.0.0'
 # Expose the port on which your React app will run (typically 80 for HTTP)
 EXPOSE 80
 EXPOSE 443
-CMD ["npm", "run", "start"]
+EXPOSE 3000
+
+
+CMD [ "node","./standalone/server.js" ]
